@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-  noop,
-  returnTrue,
+  applyThousandSeparator,
   charIsNumber,
+  clamp,
   escapeRegExp,
+  findChangedIndex,
   fixLeadingZero,
+  getCurrentCaretPosition,
   limitToScale,
-  roundToPrecision,
+  noop,
   omit,
+  returnTrue,
+  roundToPrecision,
   setCaretPosition,
   splitDecimal,
-  findChangedIndex,
-  clamp,
-  applyThousandSeparator,
-  getCurrentCaretPosition,
 } from './utils';
 
 
@@ -58,7 +58,8 @@ const propTypes = {
   type: PropTypes.oneOf(['text', 'tel', 'password']),
   isAllowed: PropTypes.func,
   renderText: PropTypes.func,
-  getInputRef: PropTypes.func
+  getInputRef: PropTypes.func,
+  isMobile: PropTypes.bool
 };
 
 const defaultProps = {
@@ -79,7 +80,8 @@ const defaultProps = {
   onMouseUp: noop,
   onFocus: noop,
   onBlur: noop,
-  isAllowed: returnTrue
+  isAllowed: returnTrue,
+  isMobile: false
 };
 
 class NumberFormat extends React.Component {
@@ -145,14 +147,14 @@ class NumberFormat extends React.Component {
       const floatValue = parseFloat(numAsString);
       const lastFloatValue = parseFloat(lastNumStr);
 
-      if (
-        //while typing set state only when float value changes
-        ((!isNaN(floatValue) || !isNaN(lastFloatValue)) && floatValue !== lastFloatValue) ||
-        //can also set state when float value is same and the format props changes
-        lastValueWithNewFormat !== stateValue ||
-        //set state always when not in focus and formatted value is changed
-        (focusedElm === null && formattedValue !== stateValue)
-      ) {
+      const shouldUpdateValue =  ((!isNaN(floatValue) || !isNaN(lastFloatValue)) && floatValue !== lastFloatValue) ||
+          //while typing set state only when float value changes
+          //can also set state when float value is same and the format props changes
+          lastValueWithNewFormat !== stateValue ||
+          //set state always when not in focus and formatted value is changed
+          (focusedElm === null && formattedValue !== stateValue)
+
+      if ( props.isMobile || shouldUpdateValue) {
         this.updateValue({ formattedValue, numAsString, input: focusedElm });
       }
     }
@@ -744,7 +746,7 @@ class NumberFormat extends React.Component {
       if (!allowLeadingZeros) {
         numAsString = fixLeadingZero(numAsString);
       }
-      
+
       const formattedValue = this.formatNumString(numAsString);
 
       //change the state

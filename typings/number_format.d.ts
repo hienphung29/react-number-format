@@ -60,6 +60,7 @@ declare module "react-number-format" {
     getInputRef?: ((el: HTMLInputElement) => void) | React.Ref<any>;
     allowedDecimalSeparators?: Array<string>;
     [key: string]: any;
+    isMobile: boolean;
   }
 
   class NumberFormat extends React.Component<NumberFormatProps, any> {}
