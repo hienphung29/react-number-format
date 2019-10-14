@@ -59,7 +59,8 @@ const propTypes = {
   isAllowed: PropTypes.func,
   renderText: PropTypes.func,
   getInputRef: PropTypes.func,
-  isMobile: PropTypes.bool
+  isMobile: PropTypes.bool,
+  isLabel: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -81,7 +82,8 @@ const defaultProps = {
   onFocus: noop,
   onBlur: noop,
   isAllowed: returnTrue,
-  isMobile: false
+  isMobile: false,
+  isLabel: false
 };
 
 class NumberFormat extends React.Component {
@@ -463,7 +465,7 @@ class NumberFormat extends React.Component {
    * @return {string} formatted Value
    */
   formatAsNumber(numStr: string) {
-    const {decimalScale, fixedDecimalScale, prefix, suffix, allowNegative, thousandsGroupStyle} = this.props;
+    const {decimalScale, fixedDecimalScale, prefix, suffix, allowNegative, thousandsGroupStyle, isLabel} = this.props;
     const {thousandSeparator, decimalSeparator} = this.getSeparators();
 
     let {beforeDecimal, afterDecimal, addNegation} = splitDecimal(numStr, allowNegative); // eslint-disable-line prefer-const
@@ -475,7 +477,7 @@ class NumberFormat extends React.Component {
       beforeDecimal = applyThousandSeparator(beforeDecimal, thousandSeparator, thousandsGroupStyle);
     }
 
-    const hasValidAfterDecimal = afterDecimal !== '' && parseInt(afterDecimal, 10) > 0;
+    const hasValidAfterDecimal = isLabel ? afterDecimal !== '' && parseInt(afterDecimal, 10) > 0 : true;
 
     const hasDecimalSeparator = hasValidAfterDecimal && (numStr.indexOf('.') !== -1 || (decimalScale && fixedDecimalScale));
 
