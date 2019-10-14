@@ -486,7 +486,7 @@ class NumberFormat extends React.Component {
     //restore negation sign
     if (addNegation) beforeDecimal = '-' + beforeDecimal;
 
-    numStr = beforeDecimal + (hasDecimalSeparator && decimalSeparator ||  '') + afterDecimal;
+    numStr = beforeDecimal + (hasDecimalSeparator && decimalSeparator ||  '') + (hasDecimalSeparator && afterDecimal || '');
 
     return numStr;
   }
