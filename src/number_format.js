@@ -477,7 +477,7 @@ class NumberFormat extends React.Component {
       beforeDecimal = applyThousandSeparator(beforeDecimal, thousandSeparator, thousandsGroupStyle);
     }
 
-    const hasValidAfterDecimal = isLabel ? afterDecimal !== '' && parseInt(afterDecimal, 10) > 0 : true;
+    const hasValidAfterDecimal = isLabel && !fixedDecimalScale ? afterDecimal !== '' && parseInt(afterDecimal, 10) > 0 : true;
 
     const hasDecimalSeparator = hasValidAfterDecimal && (numStr.indexOf('.') !== -1 || (decimalScale && fixedDecimalScale));
 
